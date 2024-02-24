@@ -232,17 +232,29 @@ module.exports = {
     },
     createCity: (req, res) => {
         sequelize.query(`
-        insert into cities (name)
-
+        insert into cities (name, rating, country_id)
+        values(
+            '${req.body.name}', '${req.body.rating}', '${req.body.countryId}'
+        )
         `).then((dbRes) => {
             res.status(200).send(dbRes[0])
         }).catch(err => console.log('you are x2 cringe', err))
+        console.log(req.body)
     },
     getCities: (req, res) => {
         sequelize.query(`
-
+            SELECT cities.city_id, cities.name AS city, cities.rating, countries.name AS country, countries.country_id
+            FROM cities
+            JOIN countries ON cities.country_id = countries.country_id
         `).then((dbRes) => {
             res.status(200).send(dbRes[0])
          }).catch(err => console.log('you are x3 cringe', err))
+    },
+    deleteCity: (req, res) => {
+        sequelize.query(`
+             DELETE FROM cities WHERE city_id = ${req.params.id}
+        `).then((dbRes) => {
+            res.status(200).send(dbRes[0])
+         }).catch(err => console.log('you are x4 cringe', err))     
     }
 }
